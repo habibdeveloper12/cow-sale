@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
-export const createAcademicFecultyZodSchema = z.object({
+export const createOrdersZodSchema = z.object({
   body: z.object({
     title: z.string({
       required_error: 'title is require',
     }),
   }),
 });
-export const updateAcademicFecultyZodSchema = z.object({
+export const updateOrdersZodSchema = z.object({
   body: z.object({
     title: z
       .string({
@@ -17,7 +17,7 @@ export const updateAcademicFecultyZodSchema = z.object({
   }),
 });
 
-export const AcademicFecultyValidation = {
-  createAcademicFecultyZodSchema,
-  updateAcademicFecultyZodSchema,
+export const OrdersValidation = {
+  createOrdersZodSchema,
+  updateOrdersZodSchema,
 };

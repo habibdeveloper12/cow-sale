@@ -2,7 +2,7 @@ import express from 'express';
 import usersRouter from '../../app/modules/users/user.router';
 import academicSemesterRouter from '../../app/modules/academicSemester/academicSemester.router';
 import academicDepartmentRouter from '../../app/modules/academicDepartment/academicDepartment.router';
-import academicFacultyRouter from '../../app/modules/academicFeculty/academicFeculty.router';
+import academicFacultyRouter from '../../app/modules/orders/orders.router';
 import studentRouter from '../../app/modules/student/student.router';
 const router = express.Router();
 

@@ -1,6 +1,3 @@
-import httpStatus from 'http-status';
-import ApiError from '../../../errors/ApiError';
-import { academicSemesterTitleCodeWrapper } from './cows.constant';
 import { ICows, ISearchTermField } from './cows.interface';
 import { Cows } from './cows.modal';
 import { IPagination } from '../../../interfaces/pagination';
@@ -8,27 +5,28 @@ import { IGenericResponseMetaData } from '../../../interfaces/common';
 import createPaginationHelpers from '../../../helpers/paginationHelpers';
 import { SortOrder } from 'mongoose';
 
-const createSemester = async (payload: ICows): Promise<ICows> => {
+const createCows = async (payload: ICows): Promise<ICows> => {
   //Summer 02 !== 03
-  if (academicSemesterTitleCodeWrapper[payload.title] != payload.code) {
-    throw new ApiError(
-      httpStatus.BAD_GATEWAY,
-      'session all will be need same as per code showing'
-    );
-  }
+  // if (academicCowsTitleCodeWrapper[payload.title] != payload.code) {
+  //   throw new ApiError(
+  //     httpStatus.BAD_GATEWAY,
+  //     'session all will be need same as per code showing'
+  //   );
+  // }
   const result = await Cows.create(payload);
   return result;
 };
 
-const getAllSemester = async (
+const getAllCows = async (
   pagination: IPagination,
   searchTermField: ISearchTermField
 ): Promise<IGenericResponseMetaData<ICows[]>> => {
   const { page, limit, skip, sortBy, sortOrder } =
     createPaginationHelpers(pagination);
-  const { searchTerm, ...fieldData }: ISearchTermField = searchTermField;
+  const { searchTerm, minPrice, maxPrice, ...fieldData }: ISearchTermField =
+    searchTermField;
 
-  const searchItemField = ['title', 'code', 'year'];
+  const searchItemField = ['minPrice', 'maxPrice', 'location'];
   const andCondition = [];
 
   if (searchTerm) {
@@ -38,31 +36,13 @@ const getAllSemester = async (
       })),
     });
   }
+  if (minPrice) {
+    andCondition.push({ minPrice: { $gte: minPrice } });
+  }
 
-  // const andCondition = [
-  //   {
-  //     $or: [
-  //       {
-  //         title: {
-  //           $regex: searchTerm,
-  //           $options: 'i',
-  //         },
-  //       },
-  //       {
-  //         code: {
-  //           $regex: searchTerm,
-  //           $options: 'i',
-  //         },
-  //       },
-  //       {
-  //         year: {
-  //           $regex: searchTerm,
-  //           $options: 'i',
-  //         },
-  //       },
-  //     ],
-  //   },
-  // ];
+  if (maxPrice) {
+    andCondition.push({ maxPrice: { $lte: maxPrice } });
+  }
 
   if (Object.keys(fieldData).length) {
     andCondition.push({
@@ -84,7 +64,8 @@ const getAllSemester = async (
   const result = await Cows.find(whereCondition)
     .sort(sortObject)
     .skip(skip)
-    .limit(limit);
+    .limit(limit)
+    .populate('seller');
   const total = await Cows.countDocuments();
   return {
     meta: {
@@ -96,24 +77,25 @@ const getAllSemester = async (
   };
 };
 
-const getSingleSemester = async (id: string): Promise<ICows | null> => {
-  const result = await Cows.findById(id);
+const getSingleCows = async (id: string): Promise<ICows | null> => {
+  const result = await Cows.findById(id).populate('seller');
   return result;
 };
 const updateCows = async (
   id: string,
   payload: Partial<ICows>
 ): Promise<ICows | null> => {
-  if (
-    payload.title &&
-    payload.code &&
-    academicSemesterTitleCodeWrapper[payload.title] != payload.code
-  ) {
-    throw new ApiError(
-      httpStatus.BAD_GATEWAY,
-      'there need to give same right way'
-    );
-  }
+  // if (
+  //   payload.title &&
+  //   payload.code &&
+  //   academicCowsTitleCodeWrapper[payload.title] != payload.code
+  // ) {
+  //   throw new ApiError(
+  //     httpStatus.BAD_GATEWAY,
+  //     'there need to give same right way'
+  //   );
+  // }
+  console.log(id, payload);
   const result = await Cows.findByIdAndUpdate({ _id: id }, payload, {
     new: true,
   });
@@ -121,14 +103,19 @@ const updateCows = async (
 };
 
 const deleteCows = async (id: string): Promise<ICows | null> => {
-  const result = await Cows.findOneAndDelete({ _id: id });
+  const result = await Cows.findOneAndDelete(
+    { _id: id },
+    {
+      new: true,
+    }
+  ).populate('seller');
   return result;
 };
 
 export const CowsService = {
-  createSemester,
-  getAllSemester,
-  getSingleSemester,
+  createCows,
+  getAllCows,
+  getSingleCows,
   updateCows,
   deleteCows,
 };

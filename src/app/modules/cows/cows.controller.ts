@@ -13,8 +13,8 @@ import { ICows } from './cows.interface';
 const useCreateCows: RequestHandler = cerateAsync(
   async (req: Request, res: Response) => {
     const { ...cowsData } = req.body;
-    const result = await CowsService.createSemester(cowsData);
-
+    const result = await CowsService.createCows(cowsData);
+    console.log(req);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       message: 'Cows had been created',
@@ -34,14 +34,14 @@ const getAllCows: RequestHandler = cerateAsync(
     // };
     const paginationField = pick(req.query, paginationFieldData);
     const searchTermField = pick(req.query, searchableField);
-    const result = await CowsService.getAllSemester(
+    const result = await CowsService.getAllCows(
       paginationField,
       searchTermField
     );
 
     sendResponse<ICows[]>(res, {
       statusCode: httpStatus.OK,
-      message: 'Here is Academic Semester ',
+      message: 'Here is  Cows ',
       success: true,
       data: result.data,
       meta: result.meta,
@@ -52,11 +52,11 @@ const getAllCows: RequestHandler = cerateAsync(
 const getSingleCows: RequestHandler = cerateAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
-    const result = await CowsService.getSingleSemester(id);
+    const result = await CowsService.getSingleCows(id);
 
     sendResponse<ICows>(res, {
       statusCode: httpStatus.OK,
-      message: 'Here is Single Academic Semester  ',
+      message: 'Here is Single  Cows  ',
       success: true,
       data: result,
     });
@@ -66,11 +66,12 @@ const updateCows: RequestHandler = cerateAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
     const payload = req.body;
+    console.log(payload);
     const result = await CowsService.updateCows(id, payload);
 
     sendResponse<ICows>(res, {
       statusCode: httpStatus.OK,
-      message: 'Update Semester Successfully ',
+      message: 'Update Cows Successfully ',
       success: true,
       data: result,
     });
@@ -84,7 +85,7 @@ const deleteCows: RequestHandler = cerateAsync(
 
     sendResponse<ICows>(res, {
       statusCode: httpStatus.OK,
-      message: 'Update Semester Successfully ',
+      message: 'Update Cows Successfully ',
       success: true,
       data: result,
     });

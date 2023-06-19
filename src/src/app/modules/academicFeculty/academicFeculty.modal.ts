@@ -1,10 +1,7 @@
 import { Schema, model } from 'mongoose';
-import {
-  AcademicFecultyModal,
-  IAcademicFeculty,
-} from './academicFeculty.interface';
+import { OrdersModal, IOrders } from './orders.interface';
 
-const academicFecultySchema = new Schema<IAcademicFeculty>(
+const academicFecultySchema = new Schema<IOrders>(
   {
     title: {
       type: String,
@@ -19,8 +16,8 @@ const academicFecultySchema = new Schema<IAcademicFeculty>(
   }
 );
 
-export const AcademicFeculty = model<IAcademicFeculty, AcademicFecultyModal>(
-  'AcademicFeculty',
+export const Orders = model<IOrders, OrdersModal>(
+  'Orders',
   academicFecultySchema
 );
 //handling same year and same semester issue

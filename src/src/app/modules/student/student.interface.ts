@@ -1,6 +1,6 @@
 import { Model, Types } from 'mongoose';
 import { IAcademicDepartment } from '../academicDepartment/academicDepartment.interface';
-import { IAcademicFeculty } from '../academicFeculty/academicFeculty.interface';
+import { IOrders } from '../orders/orders.interface';
 import { IAcademicSemester } from '../academicSemester/academicSemester.interface';
 
 export type UserName = {
@@ -39,7 +39,7 @@ export type IStudent = {
   permanentAddress: string;
   guardian: Guardian; // embedded object
   localGuardian: LocalGuardian; // embedded object
-  academicFaculty: Types.ObjectId | IAcademicFeculty; // reference _id
+  academicFaculty: Types.ObjectId | IOrders; // reference _id
   academicDepartment: Types.ObjectId | IAcademicDepartment; // // reference _id
   academicSemester: Types.ObjectId | IAcademicSemester; // reference _id
   profileImage?: string;

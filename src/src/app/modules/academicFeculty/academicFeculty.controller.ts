@@ -1,5 +1,5 @@
 import { Request, RequestHandler, Response } from 'express';
-import { AcademicFecultyService } from './academicFeculty.service';
+import { OrdersService } from './orders.service';
 import cerateAsync from '../../../shared/createAsync';
 import sendResponse from '../../../shared/sendRespond';
 import httpStatus from 'http-status';
@@ -8,14 +8,12 @@ import {
   paginationFieldData,
   searchableField,
 } from '../../../constants/paginationField';
-import { IAcademicFeculty } from './academicFeculty.interface';
+import { IOrders } from './orders.interface';
 
-const useCreateAcademicFeculty: RequestHandler = cerateAsync(
+const useCreateOrders: RequestHandler = cerateAsync(
   async (req: Request, res: Response) => {
     const { ...academicFecultyData } = req.body;
-    const result = await AcademicFecultyService.createFeculty(
-      academicFecultyData
-    );
+    const result = await OrdersService.createFeculty(academicFecultyData);
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -26,7 +24,7 @@ const useCreateAcademicFeculty: RequestHandler = cerateAsync(
   }
 );
 
-const getAllAcademicFeculty: RequestHandler = cerateAsync(
+const getAllOrders: RequestHandler = cerateAsync(
   async (req: Request, res: Response) => {
     // const pagination: IPagination = {
     //   page: Number(req.query.page),
@@ -36,12 +34,12 @@ const getAllAcademicFeculty: RequestHandler = cerateAsync(
     // };
     const paginationField = pick(req.query, paginationFieldData);
     const searchTermField = pick(req.query, searchableField);
-    const result = await AcademicFecultyService.getAllFeculty(
+    const result = await OrdersService.getAllFeculty(
       paginationField,
       searchTermField
     );
 
-    sendResponse<IAcademicFeculty[]>(res, {
+    sendResponse<IOrders[]>(res, {
       statusCode: httpStatus.OK,
       message: 'Here is Academic Feculty ',
       success: true,
@@ -51,12 +49,12 @@ const getAllAcademicFeculty: RequestHandler = cerateAsync(
   }
 );
 
-const getSingleAcademicFeculty: RequestHandler = cerateAsync(
+const getSingleOrders: RequestHandler = cerateAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
-    const result = await AcademicFecultyService.getSingleFeculty(id);
+    const result = await OrdersService.getSingleFeculty(id);
 
-    sendResponse<IAcademicFeculty>(res, {
+    sendResponse<IOrders>(res, {
       statusCode: httpStatus.OK,
       message: 'Here is Single Academic Feculty  ',
       success: true,
@@ -64,16 +62,13 @@ const getSingleAcademicFeculty: RequestHandler = cerateAsync(
     });
   }
 );
-const updateAcademicFeculty: RequestHandler = cerateAsync(
+const updateOrders: RequestHandler = cerateAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
     const payload = req.body;
-    const result = await AcademicFecultyService.updateAcademicFeculty(
-      id,
-      payload
-    );
+    const result = await OrdersService.updateOrders(id, payload);
 
-    sendResponse<IAcademicFeculty>(res, {
+    sendResponse<IOrders>(res, {
       statusCode: httpStatus.OK,
       message: 'Update Feculty Successfully ',
       success: true,
@@ -81,13 +76,13 @@ const updateAcademicFeculty: RequestHandler = cerateAsync(
     });
   }
 );
-const deleteAcademicFeculty: RequestHandler = cerateAsync(
+const deleteOrders: RequestHandler = cerateAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
 
-    const result = await AcademicFecultyService.deleteAcademicFeculty(id);
+    const result = await OrdersService.deleteOrders(id);
 
-    sendResponse<IAcademicFeculty>(res, {
+    sendResponse<IOrders>(res, {
       statusCode: httpStatus.OK,
       message: 'Update Feculty Successfully ',
       success: true,
@@ -96,10 +91,10 @@ const deleteAcademicFeculty: RequestHandler = cerateAsync(
   }
 );
 
-export const AcademicFecultyController = {
-  useCreateAcademicFeculty,
-  getAllAcademicFeculty,
-  getSingleAcademicFeculty,
-  updateAcademicFeculty,
-  deleteAcademicFeculty,
+export const OrdersController = {
+  useCreateOrders,
+  getAllOrders,
+  getSingleOrders,
+  updateOrders,
+  deleteOrders,
 };

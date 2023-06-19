@@ -10,9 +10,9 @@ const academicDepartmentSchema = new Schema<IAcademicDepartment>(
       type: String,
       required: true,
     },
-    academicFeculty: {
+    orders: {
       type: Schema.Types.ObjectId,
-      ref: 'AcademicFeculty',
+      ref: 'Orders',
       required: true,
     },
   },

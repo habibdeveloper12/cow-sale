@@ -1,16 +1,67 @@
-import { IOrders } from './orders.interface';
-import { Orders } from './orders.modal';
+import { IOrders } from './order.interface';
+import { Orders } from './order.modal';
 import { IPagination } from '../../../interfaces/pagination';
 import { IGenericResponseMetaData } from '../../../interfaces/common';
 import createPaginationHelpers from '../../../helpers/paginationHelpers';
-import { SortOrder } from 'mongoose';
-import { ISearchTermField } from '../academicSemester/academicSemester.interface';
+import mongoose, { SortOrder } from 'mongoose';
+import { ICows, ISearchTermField } from '../cows/cows.interface';
+import { User } from '../users/user.modal';
+import { Cows } from '../cows/cows.modal';
+type IOrderRequest = {
+  buyerId: string;
+  cowId: string;
+  cost: number;
+};
 
-const createFeculty = async (payload: IOrders): Promise<IOrders> => {
+const createOrders = async ({
+  cowId,
+  buyerId,
+  cost,
+}: IOrderRequest): Promise<IOrders[]> => {
   //Summer 02 !== 03
-  console.log(payload);
-  const result = await Orders.create(payload);
-  return result;
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  // Check if the buyer has enough money
+  const buyer = await User.findById(buyerId).session(session);
+  if (!buyer || buyer.budget < cost) {
+    throw new Error('Insufficient funds');
+  }
+
+  // Update the cow's label to 'sold out'
+  await Cows.findByIdAndUpdate(cowId, { label: 'sold out' }).session(session);
+
+  // Deduct the cost from the buyer's budget
+  await User.findByIdAndUpdate(buyerId, { $inc: { budget: -cost } }).session(
+    session
+  );
+
+  // Get the seller's ID associated with the cow
+  const cow: ICows | null = await Cows.findById(cowId).session(session);
+  if (!cow) {
+    throw new Error('Cow not found');
+  }
+
+  // Add the cost to the seller's income
+  await User.findByIdAndUpdate(cow, { $inc: { income: cost } }).session(
+    session
+  );
+
+  // Create an entry in the orders collection
+  const order = new Orders({
+    buyer: buyerId,
+    cow: cowId,
+    cost,
+  });
+  await order.save({ session });
+
+  await session.commitTransaction();
+  session.endSession();
+
+  // Return the ordered array of objects
+  const orders = await Orders.find().exec();
+
+  return orders;
 };
 
 const getAllFeculty = async (
@@ -89,29 +140,7 @@ const getAllFeculty = async (
   };
 };
 
-const getSingleFeculty = async (id: string): Promise<IOrders | null> => {
-  const result = await Orders.findById(id);
-  return result;
-};
-const updateOrders = async (
-  id: string,
-  payload: Partial<IOrders>
-): Promise<IOrders | null> => {
-  const result = await Orders.findByIdAndUpdate({ _id: id }, payload, {
-    new: true,
-  });
-  return result;
-};
-
-const deleteOrders = async (id: string): Promise<IOrders | null> => {
-  const result = await Orders.findOneAndDelete({ _id: id });
-  return result;
-};
-
 export const OrdersService = {
-  createFeculty,
+  createOrders,
   getAllFeculty,
-  getSingleFeculty,
-  updateOrders,
-  deleteOrders,
 };

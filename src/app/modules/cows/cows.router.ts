@@ -15,6 +15,7 @@ router.get('/', CowsController.getAllCows);
 
 router.get('/:id', CowsController.getSingleCows);
 router.delete('/:id', CowsController.deleteCows);
+router.patch('/:id', CowsController.updateCows);
 
 // router.patch(
 //   '/:id',

@@ -1,24 +1,24 @@
 import { Router } from 'express';
 import validationRequest from '../../middleware/validationRequest';
-import { AcademicFecultyValidation } from './academicFeculty.velidation';
-import { AcademicFecultyController } from './academicFeculty.controller';
+import { OrdersValidation } from './orders.velidation';
+import { OrdersController } from './orders.controller';
 
 const router = Router();
 
-router.get('/', AcademicFecultyController.getAllAcademicFeculty);
+router.get('/', OrdersController.getAllOrders);
 
-router.get('/:id', AcademicFecultyController.getSingleAcademicFeculty);
-router.delete('/:id', AcademicFecultyController.deleteAcademicFeculty);
+router.get('/:id', OrdersController.getSingleOrders);
+router.delete('/:id', OrdersController.deleteOrders);
 
 router.post(
   '/create-faculty',
-  validationRequest(AcademicFecultyValidation.createAcademicFecultyZodSchema),
-  AcademicFecultyController.useCreateAcademicFeculty
+  validationRequest(OrdersValidation.createOrdersZodSchema),
+  OrdersController.useCreateOrders
 );
 router.patch(
   '/:id',
-  validationRequest(AcademicFecultyValidation.updateAcademicFecultyZodSchema),
-  AcademicFecultyController.updateAcademicFeculty
+  validationRequest(OrdersValidation.updateOrdersZodSchema),
+  OrdersController.updateOrders
 );
-router.delete('/:id', AcademicFecultyController.deleteAcademicFeculty);
+router.delete('/:id', OrdersController.deleteOrders);
 export default router;

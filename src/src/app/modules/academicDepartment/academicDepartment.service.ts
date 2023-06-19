@@ -11,9 +11,7 @@ const createDepartment = async (
 ): Promise<IAcademicDepartment> => {
   //Summer 02 !== 03
   console.log(payload);
-  const result = (await AcademicDepartment.create(payload)).populate(
-    'academicFeculty'
-  );
+  const result = (await AcademicDepartment.create(payload)).populate('orders');
   return result;
 };
 
@@ -82,7 +80,7 @@ const getAllDepartment = async (
     .sort(sortObject)
     .skip(skip)
     .limit(limit)
-    .populate('academicFeculty');
+    .populate('orders');
   const total = await AcademicDepartment.countDocuments();
   return {
     meta: {
@@ -97,9 +95,7 @@ const getAllDepartment = async (
 const getSingleDepartment = async (
   id: string
 ): Promise<IAcademicDepartment | null> => {
-  const result = await AcademicDepartment.findById(id).populate(
-    'academicFeculty'
-  );
+  const result = await AcademicDepartment.findById(id).populate('orders');
   return result;
 };
 const updateAcademicDepartment = async (
@@ -110,7 +106,7 @@ const updateAcademicDepartment = async (
     { _id: id },
     payload,
     { new: true }
-  ).populate('academicFeculty');
+  ).populate('orders');
   return result;
 };
 
@@ -119,7 +115,7 @@ const deleteAcademicDepartment = async (
 ): Promise<IAcademicDepartment | null> => {
   const result = await AcademicDepartment.findOneAndDelete({
     _id: id,
-  }).populate('academicFeculty');
+  }).populate('orders');
   return result;
 };
 

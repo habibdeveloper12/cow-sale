@@ -8,6 +8,10 @@ const moduleRoutes = [
     path: '/users',
     router: usersRouter,
   },
+  {
+    path: '/cows',
+    router: cowsRouter,
+  },
 ];
 moduleRoutes.forEach(route => router.use(route.path, route.router));
 router.use('users/', usersRouter);

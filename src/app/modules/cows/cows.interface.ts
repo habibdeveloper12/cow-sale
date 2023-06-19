@@ -1,5 +1,5 @@
 import { Model, Types } from 'mongoose';
-import { Breed, Category, Label } from './cows.enum';
+import { Breed, Category, Label, Location } from './cows.enum';
 
 export type ICows = {
   name: string;
@@ -15,4 +15,6 @@ export type ICows = {
 export type CowsModal = Model<ICows>;
 export type ISearchTermField = {
   searchTerm?: string;
+  maxPrice?: string;
+  minPrice?: number;
 };

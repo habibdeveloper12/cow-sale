@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 
-export type IAcademicFeculty = {
+export type IOrders = {
   title: string;
 };
-export type AcademicFecultyModal = Model<IAcademicFeculty>;
+export type OrdersModal = Model<IOrders>;

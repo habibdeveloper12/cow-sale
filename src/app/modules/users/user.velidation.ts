@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
 export const createZodUserSchema = z.object({
-  _id: z.string(),
-  phoneNumber: z.string(),
+  phoneNumber: z.string({}),
   role: z.enum(['seller', 'buyer']),
   password: z.string(),
   name: z.object({
@@ -12,6 +11,4 @@ export const createZodUserSchema = z.object({
   address: z.string(),
   budget: z.number(),
   income: z.number(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
 });

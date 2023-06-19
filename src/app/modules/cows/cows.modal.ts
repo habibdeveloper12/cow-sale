@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { CowsModal, ICows } from './cows.interface';
-import { Breed, Category, Label } from './cows.enum';
+import { Breed, Category, Label, Location } from './cows.enum';
 const cowsSchema = new Schema<ICows>(
   {
     name: { type: String, required: true },
